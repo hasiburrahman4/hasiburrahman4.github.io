@@ -33,6 +33,13 @@ atc-phase4/
 ├── Prototype.py          # Core simulation — reproduces paper figures & Table 8
 ├── Prototype_app.py      # Interactive Streamlit UI for exploratory analysis
 ├── run_atc_app.bat       # One-click launcher for the Streamlit app (Windows)
+├── images/               # Simulation output figures (Figs. 6a–6f)
+│   ├── Figure_1.png      # Fig. 6a — ASI-PLC Latency Distribution
+│   ├── Figure_2.png      # Fig. 6b — Decision Outcomes by Scenario Type
+│   ├── Figure_3.png      # Fig. 6c — Compliance Bit Timeline & Latency
+│   ├── Figure_4.png      # Fig. 6d — Latency CDF: Valid vs. Timeout
+│   ├── Figure_5.png      # Fig. 6e — Non-Compliance & Attack Detection Rate
+│   └── Figure_6.png      # Fig. 6f — ASI-PLC Safety State Machine
 └── README.md
 ```
 
@@ -69,6 +76,12 @@ Step 5 — Compliance Bit         → All checks passed          ⟹ COMPLIANT /
 | `SOFT_LOCK` | Heartbeat timeout (>500 ms) | Automatic on restored connectivity |
 | `HARD_LOCK` | Cryptographic failure (MitM / replay) | **Manual admin reset required** |
 
+The full state transition diagram (IEC 61131-3 / IEC 61511-1 SIL 2) is shown below:
+
+![Fig. 6f — ASI-PLC Safety State Machine](images/Figure_6.png)
+
+*Fig. 6f — ASI-PLC Safety State Machine (IEC 61131-3 / IEC 61511-1 SIL 2). Default state is Fail-Locked (ComplianceBit := FALSE). HARD LOCK requires authenticated manual admin reset; SOFT LOCK recovers automatically on heartbeat restoration.*
+
 ---
 
 ## Monte Carlo Simulation (n = 200, seed = 2025)
@@ -85,13 +98,66 @@ Step 5 — Compliance Bit         → All checks passed          ⟹ COMPLIANT /
 | Replay attack | 10 | `REPLAY` | `HARD_LOCK`, relay OFF |
 | Oracle timeout | 10 | `TIMEOUT` | `SOFT_LOCK`, relay OFF |
 
+### Decision Outcomes by Scenario Type
+
+![Fig. 6b — ASI-PLC Decision Outcomes by Scenario Type](images/Figure_2.png)
+
+*Fig. 6b — ASI-PLC decision outcomes across all 200 scenarios (n=200, seed=2025). All 120 valid scenarios resolve as COMPLIANT; all MitM and Replay attacks trigger HARD_LOCK; 9/10 timeout scenarios trigger SOFT_LOCK.*
+
+### Non-Compliance and Attack Detection Rate
+
+![Fig. 6e — Non-Compliance & Attack Detection Rate](images/Figure_5.png)
+
+*Fig. 6e — Zero false positives confirmed across all 80 non-compliant and attack scenarios. Non-compliant: 50/50 (100%); MitM: 10/10 (100%); Replay: 10/10 (100%); Timeout: 9/10 (90%, one scenario at boundary latency).*
+
 **Key results (reproduced from paper):**
 
-- Valid scenario mean latency: **275.2 ms** (P95 = 371.4 ms) — within the 500 ms permissive window
+- Valid scenario mean latency: **274.6 ms** (P95 = 320.6 ms) — within the 500 ms permissive window
 - **Zero false positives** across all 80 non-compliant/attack scenarios
 - Timeout scenarios trigger Soft Lock at mean **514.6 ms** (SD ≈ 20 ms)
 
 > ⚠️ These results confirm the logical correctness of the simulation model under the assumed latency distributions. They are not measurements from a deployed physical system.
+
+---
+
+## Simulation Output Figures
+
+Running `Prototype.py` generates the following six publication-quality figures, saved to the `images/` folder.
+
+### Fig. 6a — ASI-PLC Latency Distribution: Valid-Credential Scenarios
+
+![Fig. 6a — ASI-PLC Latency Distribution](images/Figure_1.png)
+
+*QBFT finality + OPC-UA delivery latency for valid-credential scenarios (n=120, seed=2025). Mean = 274.6 ms; P95 = 320.6 ms. All valid scenarios fall well within the 500 ms permissive window. KDE overlay confirms near-normal distribution.*
+
+---
+
+### Fig. 6c — Compliance Bit Timeline & Latency (First 40 Decisions)
+
+![Fig. 6c — Compliance Bit Timeline & Latency](images/Figure_3.png)
+
+*Top panel: Compliance Bit state (TRUE/FALSE) over the first 40 PLC decision cycles. Bottom panel: per-cycle latency with 500 ms permissive window and mean valid latency (275 ms) reference lines. All 40 valid-credential cycles resolve as COMPLIANT with latency well below the threshold.*
+
+---
+
+### Fig. 6d — ASI-PLC Latency CDF: Valid vs. Timeout Scenarios
+
+![Fig. 6d — Latency CDF: Valid vs. Timeout](images/Figure_4.png)
+
+*Cumulative distribution functions for valid (n=120, solid green) and timeout (n=10, dashed blue) scenarios. Valid P95 = 320.6 ms; the entire valid CDF sits below the 500 ms permissive window. All timeout scenarios fall in the Soft Lock zone (>500 ms), confirming clean separation between the two populations.*
+
+---
+
+## Security Scenarios Tested
+
+| Threat | Injection Method | ATC Response |
+|--------|-----------------|--------------|
+| **MitM payload injection** | HMAC signature corrupted | HARD_LOCK — manual reset required |
+| **Replay attack** | Stale nonce re-used (nonce = 1) | HARD_LOCK — monotonic nonce check fails |
+| **Oracle connectivity loss** | Latency drawn from `N(514.6, 20)` ms | SOFT_LOCK — relay de-energised, auto-recovers |
+| **Non-compliant weld** | `compliant_flag = False` (e.g. preheat below minimum) | `NON_COMPLIANT` — relay stays off |
+
+These correspond to the STRIDE threat model in **Table IV** of the paper.
 
 ---
 
@@ -115,7 +181,7 @@ For Windows users with Python 3.14 installed at `c:\python314\`, the batch launc
 python Prototype.py
 ```
 
-Outputs 6 publication-quality figures (Figs. 6a–6f in the paper) to the working directory.
+Outputs 6 publication-quality figures (Figs. 6a–6f) to the working directory.
 
 ### Interactive Streamlit app
 
@@ -132,19 +198,6 @@ The app provides:
 - PLC state distribution bar chart
 - Scrollable scenario detail table (first 30 results)
 - Full state count JSON export
-
----
-
-## Security Scenarios Tested
-
-| Threat | Injection Method | ATC Response |
-|--------|-----------------|--------------|
-| **MitM payload injection** | HMAC signature corrupted | HARD_LOCK — manual reset required |
-| **Replay attack** | Stale nonce re-used (nonce = 1) | HARD_LOCK — monotonic nonce check fails |
-| **Oracle connectivity loss** | Latency drawn from `N(514.6, 20)` ms | SOFT_LOCK — relay de-energised, auto-recovers |
-| **Non-compliant weld** | `compliant_flag = False` (e.g. preheat below minimum) | `NON_COMPLIANT` — relay stays off |
-
-These correspond to the STRIDE threat model in **Table IV** of the paper.
 
 ---
 
@@ -190,10 +243,10 @@ If you use this code in your research, please cite:
 ---
 
 ## Authors
-**Hasibur Rahman** · **Sk. Riad Bin Ashraf** · **Bernd Noche** · **Tan Gürpinar**  
-Chair of Transport Systems and Logistics (TuL), University of Duisburg-Essen, Germany  
-*(Hasibur Rahman — Islamic University of Technology (IUT), Bangladesh; Contributing Researcher)*
 
+**Sk. Riad Bin Ashraf** · **Bernd Noche** · **Tan Gürpinar**  
+Chair of Transport Systems and Logistics (TuL), Faculty of Engineering  
+University of Duisburg-Essen, 47057 Duisburg, Germany  
 Correspondence: shake.ashraf@uni-due.de
 
 ---
