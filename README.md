@@ -233,7 +233,7 @@ If you use this code in your research, please cite:
              Framework for Structural Integrity Assurance in Green Hydrogen
              Infrastructure},
   journal = {IEEE Access},
-  year    = {2025},
+  year    = {2026},
   note    = {Under review}
 }
 ```
