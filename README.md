@@ -190,10 +190,10 @@ If you use this code in your research, please cite:
 ---
 
 ## Authors
+**Hasibur Rahman** · **Sk. Riad Bin Ashraf** · **Bernd Noche** · **Tan Gürpinar**  
+Chair of Transport Systems and Logistics (TuL), University of Duisburg-Essen, Germany  
+*(Hasibur Rahman — Islamic University of Technology (IUT), Bangladesh; Contributing Researcher)*
 
-**Sk. Riad Bin Ashraf** · **Bernd Noche** · **Tan Gürpinar**  
-Chair of Transport Systems and Logistics (TuL), Faculty of Engineering  
-University of Duisburg-Essen, 47057 Duisburg, Germany  
 Correspondence: shake.ashraf@uni-due.de
 
 ---
