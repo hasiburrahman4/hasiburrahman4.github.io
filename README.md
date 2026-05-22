@@ -1,8 +1,16 @@
 # Adaptive Trust Chain (ATC) — Phase 4: ASI-PLC Simulator
 
-> **Companion code for:**  
-> Sk. Riad Bin Ashraf, Bernd Noche, Tan Gürpinar — *"Adaptive Trust Chain (ATC): A Blockchain-Based Weld Certification Framework for Structural Integrity Assurance in Green Hydrogen Infrastructure"* — IEEE Access (under review)  
+> **Companion code for:**
+> Sk. Riad Bin Ashraf, Bernd Noche, Tan Gürpinar — *"Adaptive Trust Chain (ATC): A Blockchain-Based Weld Certification Framework for Structural Integrity Assurance in Green Hydrogen Infrastructure"* — IEEE Access (under review)
 > Chair of Transport Systems and Logistics (TuL), University of Duisburg-Essen, Germany
+
+---
+
+## 🔗 Live Interactive Simulator
+
+**[Launch the ASI-PLC Simulator in your browser →](https://hasiburrahman4.github.io/simulator.html)**
+
+No installation required. Adjust scenario counts and fault injection parameters, run the simulation, and explore latency distributions and PLC state transitions interactively — all in a single HTML page.
 
 ---
 
@@ -28,10 +36,10 @@ The ATC addresses this by linking a Hyperledger Besu QBFT blockchain directly to
 ## Repository Structure
 
 ```
-atc-phase4/
+hasiburrahman4.github.io/
 │
-├── Prototype.py          # Core simulation — reproduces paper figures & Table 8
 ├── Prototype_app.py      # Interactive Streamlit UI for exploratory analysis
+├── simulator.html        # Standalone browser-based simulator (no install needed)
 ├── run_atc_app.bat       # One-click launcher for the Streamlit app (Windows)
 ├── Images/               # Simulation output figures (Figs. 6a–6f)
 │   ├── Figure_1.png      # Fig. 6a — ASI-PLC Latency Distribution
@@ -50,7 +58,7 @@ atc-phase4/
 | 1 | `WeldComplianceASC.sol` | Solidity 0.8.20 Adaptive Smart Contract |
 | 2 | Quantitative simulations | Weibull, Paris–Erdogan, DTMC models |
 | 3 | Oracle Gateway Simulator | Payload generation and signing |
-| **4** | **`Prototype.py` / `Prototype_app.py`** | **ASI-PLC state machine & Monte Carlo (this repo)** |
+| **4** | **`Prototype_app.py` / `simulator.html`** | **ASI-PLC state machine & Monte Carlo (this repo)** |
 
 ---
 
@@ -86,7 +94,7 @@ The full state transition diagram (IEC 61131-3 / IEC 61511-1 SIL 2) is shown bel
 
 ## Monte Carlo Simulation (n = 200, seed = 2025)
 
-`Prototype.py` runs 200 welding operation scenarios across five fault types and reproduces all results in **Section VII-E** and **Table 8** of the paper.
+`Prototype_app.py` and `simulator.html` both run 200 welding operation scenarios across five fault types and reproduce all results in **Section VII-E** and **Table 8** of the paper.
 
 **Default scenario plan:**
 
@@ -122,7 +130,7 @@ The full state transition diagram (IEC 61131-3 / IEC 61511-1 SIL 2) is shown bel
 
 ## Simulation Output Figures
 
-Running `Prototype.py` generates the following six publication-quality figures, saved to the `images/` folder.
+Running `Prototype_app.py` or using the [browser simulator](https://hasiburrahman4.github.io/simulator.html) generates the following visualisations.
 
 ### Fig. 6a — ASI-PLC Latency Distribution: Valid-Credential Scenarios
 
@@ -161,7 +169,13 @@ These correspond to the STRIDE threat model in **Table IV** of the paper.
 
 ---
 
-## Installation
+## Usage
+
+### Option A — Browser (no installation)
+
+Open **[https://hasiburrahman4.github.io/simulator.html](https://hasiburrahman4.github.io/simulator.html)** in any modern browser. Adjust sliders for scenario counts and fault types, then click **Run Simulation**. No Python or dependencies required.
+
+### Option B — Interactive Streamlit app
 
 **Requirements:** Python 3.10+
 
@@ -169,29 +183,13 @@ These correspond to the STRIDE threat model in **Table IV** of the paper.
 pip install numpy scipy matplotlib seaborn streamlit
 ```
 
-For Windows users with Python 3.14 installed at `c:\python314\`, the batch launcher uses that path directly.
-
----
-
-## Usage
-
-### Command-line simulation (reproduces paper figures)
-
-```bash
-python Prototype.py
-```
-
-Outputs 6 publication-quality figures (Figs. 6a–6f) to the working directory.
-
-### Interactive Streamlit app
-
 ```bash
 streamlit run Prototype_app.py
 ```
 
-Or on Windows, double-click `run_atc_app.bat`.
+Or on Windows, double-click `run_atc_app.bat` (requires Python 3.14 at `c:\python314\`).
 
-The app provides:
+The Streamlit app provides:
 - Adjustable scenario counts and random seed via sidebar controls
 - Live metric cards (total scenarios, false positives/negatives, hard lock events)
 - Latency distribution histogram
@@ -210,7 +208,7 @@ All simulation parameters are fully documented in **Tables 4–6** of the manusc
 seed = 2025
 ```
 
-The simulation uses `numpy.random.default_rng(seed)` throughout. No external data files are required.
+The simulation uses `numpy.random.default_rng(seed)` throughout. No external data files are required. The browser-based `simulator.html` uses an equivalent seeded PRNG (mulberry32) and produces consistent results at `seed = 2025`.
 
 ---
 
@@ -244,13 +242,15 @@ If you use this code in your research, please cite:
 
 ## Authors
 
-**Sk. Riad Bin Ashraf** · **Bernd Noche** · **Tan Gürpinar**  
-Chair of Transport Systems and Logistics (TuL), Faculty of Engineering  
-University of Duisburg-Essen, 47057 Duisburg, Germany  
+**Sk. Riad Bin Ashraf** · **Bernd Noche** · **Tan Gürpinar**
+Chair of Transport Systems and Logistics (TuL), Faculty of Engineering
+University of Duisburg-Essen, 47057 Duisburg, Germany
 Correspondence: shake.ashraf@uni-due.de
 
 ---
 
 ## License
 
-This code is released for academic reproducibility. For commercial use or deployment in safety-critical systems, please contact the authors. No warranty is provided; this is a research prototype and must not be used as-is in any production or regulatory context.
+**`simulator.html`** is released as **public domain** — no rights reserved. Free for any use without restriction.
+
+**`Prototype_app.py`** and all other repository content are released for **academic reproducibility**. For commercial use or deployment in safety-critical systems, please contact the authors. No warranty is provided; this is a research prototype and must not be used as-is in any production or regulatory context.
