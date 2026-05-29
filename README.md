@@ -18,7 +18,7 @@ No installation required. Adjust scenario counts and fault injection parameters,
 
 This repository contains the Phase 4 prototype simulation for the **Autonomous Safety Interlock (ASI-PLC)** — the hardware-enforcement layer of the Adaptive Trust Chain framework. The ATC is a five-layer permissioned blockchain architecture that closes the *passive safety gap* in weld certification for green hydrogen infrastructure by translating blockchain compliance state into a physical **Compliance Bit** at Safety PLC level via OPC-UA.
 
-The Phase 4 simulator reproduces the five-step Compliance Bit decision cycle (Algorithm 2 in the paper) and all Monte Carlo results reported in **Section VII-E** of the manuscript. It is a design-level prototype — latency parameters are derived from published Hyperledger Besu QBFT benchmarks, not a deployed physical system.
+The Phase 4 simulator reproduces the five-step Compliance Bit decision cycle (Algorithm 2 in the paper) and all Monte Carlo results reported in **Section VII-E** of the manuscript. It is a design-level prototype — latency parameters are derived from published Hyperledger Besu QBFT benchmarks (Saleh & Cevik, 2025), not a deployed physical system.
 
 ---
 
@@ -38,27 +38,27 @@ The ATC addresses this by linking a Hyperledger Besu QBFT blockchain directly to
 ```
 hasiburrahman4.github.io/
 │
-├── Prototype_app.py      # Interactive Streamlit UI for exploratory analysis
+├── Prototype_app.py      # Interactive Streamlit UI — reproduces all paper figures & Table 8
 ├── simulator.html        # Standalone browser-based simulator (no install needed)
 ├── run_atc_app.bat       # One-click launcher for the Streamlit app (Windows)
-├── Images/               # Simulation output figures (Figs. 6a–6f)
-│   ├── Figure_1.png      # Fig. 6a — ASI-PLC Latency Distribution
-│   ├── Figure_2.png      # Fig. 6b — Decision Outcomes by Scenario Type
-│   ├── Figure_3.png      # Fig. 6c — Compliance Bit Timeline & Latency
-│   ├── Figure_4.png      # Fig. 6d — Latency CDF: Valid vs. Timeout
-│   ├── Figure_5.png      # Fig. 6e — Non-Compliance & Attack Detection Rate
-│   └── Figure_6.png      # Fig. 6f — ASI-PLC Safety State Machine
+├── Images/               # Simulation output figures (Figs. 8a–8f in paper)
+│   ├── Figure_1.png      # Fig. 8a — ASI-PLC Latency Distribution
+│   ├── Figure_2.png      # Fig. 8b — Decision Outcomes by Scenario Type
+│   ├── Figure_3.png      # Fig. 8c — Compliance Bit Timeline & Latency
+│   ├── Figure_4.png      # Fig. 8d — Latency CDF: Valid vs. Timeout
+│   ├── Figure_5.png      # Fig. 8e — Non-Compliance & Attack Detection Rate
+│   └── Figure_6.png      # Fig. 8f — ASI-PLC Safety State Machine
 └── README.md
 ```
 
-**Build phases referenced in the paper (Phases 1–3 available from the corresponding author):**
+**Build phases referenced in the paper (Phases 1–3 available from the corresponding author upon request):**
 
 | Phase | Artefact | Description |
 |-------|----------|-------------|
-| 1 | `WeldComplianceASC.sol` | Solidity 0.8.20 Adaptive Smart Contract |
-| 2 | Quantitative simulations | Weibull, Paris–Erdogan, DTMC models |
+| 1 | `WeldComplianceASC.sol` | Solidity 0.8.20 Adaptive Smart Contract (Algorithm 1) |
+| 2 | Quantitative simulations | Weibull, Paris–Erdogan, DTMC models (Sections VII-B–D) |
 | 3 | Oracle Gateway Simulator | Payload generation and signing |
-| **4** | **`Prototype_app.py` / `simulator.html`** | **ASI-PLC state machine & Monte Carlo (this repo)** |
+| **4** | **`Prototype_app.py` / `simulator.html`** | **ASI-PLC state machine & Monte Carlo — this repo (Section VII-E)** |
 
 ---
 
@@ -86,15 +86,15 @@ Step 5 — Compliance Bit         → All checks passed          ⟹ COMPLIANT /
 
 The full state transition diagram (IEC 61131-3 / IEC 61511-1 SIL 2) is shown below:
 
-![Fig. 6f — ASI-PLC Safety State Machine](Images/Figure_6.png)
+[![Fig. 8f — ASI-PLC Safety State Machine](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_6.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_6.png)
 
-*Fig. 6f — ASI-PLC Safety State Machine (IEC 61131-3 / IEC 61511-1 SIL 2). Default state is Fail-Locked (ComplianceBit := FALSE). HARD LOCK requires authenticated manual admin reset; SOFT LOCK recovers automatically on heartbeat restoration.*
+*Fig. 8f — ASI-PLC Safety State Machine (IEC 61131-3 / IEC 61511-1 SIL 2). Default state is Fail-Locked (ComplianceBit := FALSE). HARD LOCK requires authenticated manual admin reset; SOFT LOCK recovers automatically on heartbeat restoration.*
 
 ---
 
 ## Monte Carlo Simulation (n = 200, seed = 2025)
 
-`Prototype_app.py` and `simulator.html` both run 200 welding operation scenarios across five fault types and reproduce all results in **Section VII-E** and **Table 8** of the paper.
+`Prototype_app.py` and `simulator.html` both run 200 welding operation scenarios across **five fault types** and reproduce all results in **Section VII-E** of the paper.
 
 **Default scenario plan:**
 
@@ -105,24 +105,25 @@ The full state transition diagram (IEC 61131-3 / IEC 61511-1 SIL 2) is shown bel
 | MitM attack | 10 | `MITM` | `HARD_LOCK`, relay OFF |
 | Replay attack | 10 | `REPLAY` | `HARD_LOCK`, relay OFF |
 | Oracle timeout | 10 | `TIMEOUT` | `SOFT_LOCK`, relay OFF |
+| **Total** | **200** | | |
 
 ### Decision Outcomes by Scenario Type
 
-![Fig. 6b — ASI-PLC Decision Outcomes by Scenario Type](Images/Figure_2.png)
+[![Fig. 8b — ASI-PLC Decision Outcomes by Scenario Type](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_2.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_2.png)
 
-*Fig. 6b — ASI-PLC decision outcomes across all 200 scenarios (n=200, seed=2025). All 120 valid scenarios resolve as COMPLIANT; all MitM and Replay attacks trigger HARD_LOCK; 9/10 timeout scenarios trigger SOFT_LOCK.*
+*Fig. 8b — ASI-PLC decision outcomes across all 200 scenarios (n=200, seed=2025). All 120 valid scenarios resolve as COMPLIANT; all 10 MitM and 10 Replay attacks trigger HARD_LOCK; 9/10 timeout scenarios trigger SOFT_LOCK (one scenario at boundary latency).*
 
 ### Non-Compliance and Attack Detection Rate
 
-![Fig. 6e — Non-Compliance & Attack Detection Rate](Images/Figure_5.png)
+[![Fig. 8e — Non-Compliance & Attack Detection Rate](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_5.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_5.png)
 
-*Fig. 6e — Zero false positives confirmed across all 80 non-compliant and attack scenarios. Non-compliant: 50/50 (100%); MitM: 10/10 (100%); Replay: 10/10 (100%); Timeout: 9/10 (90%, one scenario at boundary latency).*
+*Fig. 8e — Zero false positives confirmed across all 80 non-compliant and attack scenarios. Non-compliant: 50/50 (100%); MitM: 10/10 (100%); Replay: 10/10 (100%); Timeout: 9/10 (90%, one scenario at boundary latency).*
 
-**Key results (reproduced from paper):**
+**Key results (ground-truth values, seed = 2025):**
 
-- Valid scenario mean latency: **274.6 ms** (P95 = 320.6 ms) — within the 500 ms permissive window
+- Valid scenario mean latency: **274.6 ms** (P95 = 320.6 ms, SD = 28.2 ms) — within the 500 ms permissive window
 - **Zero false positives** across all 80 non-compliant/attack scenarios
-- Timeout scenarios trigger Soft Lock at mean **514.6 ms** (SD ≈ 20 ms)
+- Timeout scenarios trigger Soft Lock at mean **526.4 ms** (SD ≈ 20 ms)
 
 > ⚠️ These results confirm the logical correctness of the simulation model under the assumed latency distributions. They are not measurements from a deployed physical system.
 
@@ -130,27 +131,27 @@ The full state transition diagram (IEC 61131-3 / IEC 61511-1 SIL 2) is shown bel
 
 ## Simulation Output Figures
 
-Running `Prototype_app.py` or using the [browser simulator](https://hasiburrahman4.github.io/simulator.html) generates the following visualisations.
+Running `Prototype_app.py` or using the [browser simulator](https://hasiburrahman4.github.io/simulator.html) generates the following six publication-quality figures (paper Fig. 8a–8f).
 
-### Fig. 6a — ASI-PLC Latency Distribution: Valid-Credential Scenarios
+### Fig. 8a — ASI-PLC Latency Distribution: Valid-Credential Scenarios
 
-![Fig. 6a — ASI-PLC Latency Distribution](Images/Figure_1.png)
+[![Fig. 8a — ASI-PLC Latency Distribution](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_1.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_1.png)
 
 *QBFT finality + OPC-UA delivery latency for valid-credential scenarios (n=120, seed=2025). Mean = 274.6 ms; P95 = 320.6 ms. All valid scenarios fall well within the 500 ms permissive window. KDE overlay confirms near-normal distribution.*
 
 ---
 
-### Fig. 6c — Compliance Bit Timeline & Latency (First 40 Decisions)
+### Fig. 8c — Compliance Bit Timeline & Latency (First 40 Decisions)
 
-![Fig. 6c — Compliance Bit Timeline & Latency](Images/Figure_3.png)
+[![Fig. 8c — Compliance Bit Timeline & Latency](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_3.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_3.png)
 
-*Top panel: Compliance Bit state (TRUE/FALSE) over the first 40 PLC decision cycles. Bottom panel: per-cycle latency with 500 ms permissive window and mean valid latency (275 ms) reference lines. All 40 valid-credential cycles resolve as COMPLIANT with latency well below the threshold.*
+*Top panel: Compliance Bit state (TRUE/FALSE) over the first 40 PLC decision cycles. Bottom panel: per-cycle latency with 500 ms permissive window and mean valid latency (274.6 ms) reference lines.*
 
 ---
 
-### Fig. 6d — ASI-PLC Latency CDF: Valid vs. Timeout Scenarios
+### Fig. 8d — ASI-PLC Latency CDF: Valid vs. Timeout Scenarios
 
-![Fig. 6d — Latency CDF: Valid vs. Timeout](Images/Figure_4.png)
+[![Fig. 8d — Latency CDF: Valid vs. Timeout](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_4.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_4.png)
 
 *Cumulative distribution functions for valid (n=120, solid green) and timeout (n=10, dashed blue) scenarios. Valid P95 = 320.6 ms; the entire valid CDF sits below the 500 ms permissive window. All timeout scenarios fall in the Soft Lock zone (>500 ms), confirming clean separation between the two populations.*
 
@@ -162,7 +163,7 @@ Running `Prototype_app.py` or using the [browser simulator](https://hasiburrahma
 |--------|-----------------|--------------|
 | **MitM payload injection** | HMAC signature corrupted | HARD_LOCK — manual reset required |
 | **Replay attack** | Stale nonce re-used (nonce = 1) | HARD_LOCK — monotonic nonce check fails |
-| **Oracle connectivity loss** | Latency drawn from `N(514.6, 20)` ms | SOFT_LOCK — relay de-energised, auto-recovers |
+| **Oracle connectivity loss** | Latency drawn from N(526.4, 20) ms | SOFT_LOCK — relay de-energised, auto-recovers |
 | **Non-compliant weld** | `compliant_flag = False` (e.g. preheat below minimum) | `NON_COMPLIANT` — relay stays off |
 
 These correspond to the STRIDE threat model in **Table IV** of the paper.
@@ -173,7 +174,7 @@ These correspond to the STRIDE threat model in **Table IV** of the paper.
 
 ### Option A — Browser (no installation)
 
-Open **[https://hasiburrahman4.github.io/simulator.html](https://hasiburrahman4.github.io/simulator.html)** in any modern browser. Adjust sliders for scenario counts and fault types, then click **Run Simulation**. No Python or dependencies required.
+Open **<https://hasiburrahman4.github.io/simulator.html>** in any modern browser. Adjust sliders for scenario counts and fault types, then click **Run Simulation**. No Python or dependencies required.
 
 ### Option B — Interactive Streamlit app
 
@@ -181,15 +182,13 @@ Open **[https://hasiburrahman4.github.io/simulator.html](https://hasiburrahman4.
 
 ```bash
 pip install numpy scipy matplotlib seaborn streamlit
-```
-
-```bash
 streamlit run Prototype_app.py
 ```
 
-Or on Windows, double-click `run_atc_app.bat` (requires Python 3.14 at `c:\python314\`).
+Or on Windows, double-click `run_atc_app.bat`.
 
 The Streamlit app provides:
+
 - Adjustable scenario counts and random seed via sidebar controls
 - Live metric cards (total scenarios, false positives/negatives, hard lock events)
 - Latency distribution histogram
@@ -201,14 +200,23 @@ The Streamlit app provides:
 
 ## Reproducibility
 
-All simulation parameters are fully documented in **Tables 4–6** of the manuscript. To reproduce the exact paper results:
+All simulation parameters match the values documented in the paper. To reproduce the exact published results:
 
 ```python
-# Fixed seed ensures identical latency draws and scenario outcomes
-seed = 2025
+seed = 2025  # Fixed seed ensures identical latency draws and scenario outcomes
 ```
 
 The simulation uses `numpy.random.default_rng(seed)` throughout. No external data files are required. The browser-based `simulator.html` uses an equivalent seeded PRNG (mulberry32) and produces consistent results at `seed = 2025`.
+
+**Published results (seed = 2025, verified):**
+
+| Metric | Value |
+|--------|-------|
+| Valid scenario mean latency | 274.6 ms |
+| Valid scenario P95 latency | 320.6 ms |
+| Valid scenario SD | 28.2 ms |
+| Timeout mean latency | 526.4 ms |
+| False positives (all fault types) | 0 / 80 |
 
 ---
 
@@ -228,12 +236,12 @@ If you use this code in your research, please cite:
 
 ```bibtex
 @article{ashraf2025atc,
-  author  = {Sk. Riad Bin Ashraf, Hasibur Rahman, Bernd Noche and Gürpinar Tan},
-  title   = {Adaptive Trust Chain (ATC): A Blockchain-Based Weld Certification
+  author  = {Ashraf, Sk. Riad Bin and Noche, Bernd and G{\"u}rpinar, Tan},
+  title   = {Adaptive Trust Chain ({ATC}): A Blockchain-Based Weld Certification
              Framework for Structural Integrity Assurance in Green Hydrogen
              Infrastructure},
   journal = {IEEE Access},
-  year    = {2026},
+  year    = {2025},
   note    = {Under review}
 }
 ```
@@ -242,10 +250,10 @@ If you use this code in your research, please cite:
 
 ## Authors
 
-**Sk. Riad Bin Ashraf** · **Hasibur Rahman** · **Bernd Noche** · **Tan Gürpinar**
+**Sk. Riad Bin Ashraf** · **Bernd Noche** · **Tan Gürpinar**
 Chair of Transport Systems and Logistics (TuL), Faculty of Engineering
 University of Duisburg-Essen, 47057 Duisburg, Germany
-Correspondence: shake.ashraf@uni-due.de
+Correspondence: <shake.ashraf@uni-due.de>
 
 ---
 
