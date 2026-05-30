@@ -231,7 +231,7 @@ If you use this code in your research, please cite:
 
 ```bibtex
 @article{ashraf2025atc,
-  author  = {Ashraf, Sk. Riad Bin and Noche, Bernd and Gürpinar, Tan},
+  author  = {Sk. Riad Bin Ashraf, Hasibur Rahman, Bernd Noche and Gürpinar Tan},
   title   = {Adaptive Trust Chain (ATC): A Blockchain-Based Weld Certification
              Framework for Structural Integrity Assurance in Green Hydrogen
              Infrastructure},
@@ -245,7 +245,7 @@ If you use this code in your research, please cite:
 
 ## Authors
 
-**Sk. Riad Bin Ashraf** · **Bernd Noche** · **Tan Gürpinar**  
+**Sk. Riad Bin Ashraf** · **Hasibur Rahman** · **Bernd Noche** · **Tan Gürpinar**  
 Chair of Transport Systems and Logistics (TuL), Faculty of Engineering  
 University of Duisburg-Essen, 47057 Duisburg, Germany  
 Correspondence: shake.ashraf@uni-due.de
