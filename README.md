@@ -232,7 +232,7 @@ If you use this code in your research, please cite:
 
 ```bibtex
 @article{ashraf2025atc,
-  author  = {Sk. Riad Bin Ashraf, Hasibur Rahman, Bernd Noche, Gürpinar Tan},
+  author  = {Sk. Riad Bin Ashraf, Hasibur Rahman, Bernd Noche, Tan Gürpinar},
   title   = {Adaptive Trust Chain (ATC): A Blockchain-Based Weld Certification
              Framework for Structural Integrity Assurance in Green Hydrogen
              Infrastructure},
