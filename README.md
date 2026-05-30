@@ -249,7 +249,7 @@ If you use this code in your research, please cite:
 **Sk. Riad Bin Ashraf** · **Hasibur Rahman** · **Bernd Noche** · **Tan Gürpinar**  
 Chair of Transport Systems and Logistics (TuL), Faculty of Engineering  
 University of Duisburg-Essen, 47057 Duisburg, Germany  
-Correspondence: shake.ashraf@uni-due.de
+Correspondence: riad.ashraf@uni-due.de
 
 ---
 
