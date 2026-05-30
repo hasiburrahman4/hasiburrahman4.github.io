@@ -30,10 +30,11 @@ The ATC addresses this by linking a Hyperledger Besu QBFT blockchain directly to
 ```
 atc-phase4/
 │
-├── Prototype.py          # Core simulation — reproduces paper figures & Table 8
-├── Prototype_app.py      # Interactive Streamlit UI for exploratory analysis
-├── run_atc_app.bat       # One-click launcher for the Streamlit app (Windows)
-├── Images/               # Simulation output figures (Figs. 6a–6f)
+├── Prototype.py              # Core simulation — reproduces paper figures & Table 8
+├── Prototype_app.py          # Interactive Streamlit UI for exploratory analysis
+├── asi_plc_simulator.html    # Browser-based interactive ASI-PLC state machine demo
+├── run_atc_app.bat           # One-click launcher for the Streamlit app (Windows)
+├── Images/                   # Simulation output figures (Figs. 6a–6f)
 │   ├── Figure_1.png      # Fig. 6a — ASI-PLC Latency Distribution
 │   ├── Figure_2.png      # Fig. 6b — Decision Outcomes by Scenario Type
 │   ├── Figure_3.png      # Fig. 6c — Compliance Bit Timeline & Latency
@@ -78,7 +79,7 @@ Step 5 — Compliance Bit         → All checks passed          ⟹ COMPLIANT /
 
 The full state transition diagram (IEC 61131-3 / IEC 61511-1 SIL 2) is shown below:
 
-[![Fig. 6f — ASI-PLC Safety State Machine](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_6.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_6.png)
+[![Fig. 6f — ASI-PLC Safety State Machine](Images/Figure_6.png)](Images/Figure_6.png)
 
 *Fig. 6f — ASI-PLC Safety State Machine (IEC 61131-3 / IEC 61511-1 SIL 2). Default state is Fail-Locked (ComplianceBit := FALSE). HARD LOCK requires authenticated manual admin reset; SOFT LOCK recovers automatically on heartbeat restoration.*
 
@@ -100,13 +101,13 @@ The full state transition diagram (IEC 61131-3 / IEC 61511-1 SIL 2) is shown bel
 
 ### Decision Outcomes by Scenario Type
 
-[![Fig. 6b — ASI-PLC Decision Outcomes by Scenario Type](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_2.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_2.png)
+[![Fig. 6b — ASI-PLC Decision Outcomes by Scenario Type](Images/Figure_2.png)](Images/Figure_2.png)
 
 *Fig. 6b — ASI-PLC decision outcomes across all 200 scenarios (n=200, seed=2025). All 120 valid scenarios resolve as COMPLIANT; all MitM and Replay attacks trigger HARD_LOCK; 9/10 timeout scenarios trigger SOFT_LOCK.*
 
 ### Non-Compliance and Attack Detection Rate
 
-[![Fig. 6e — Non-Compliance & Attack Detection Rate](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_5.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_5.png)
+[![Fig. 6e — Non-Compliance & Attack Detection Rate](Images/Figure_5.png)](Images/Figure_5.png)
 
 *Fig. 6e — Zero false positives confirmed across all 80 non-compliant and attack scenarios. Non-compliant: 50/50 (100%); MitM: 10/10 (100%); Replay: 10/10 (100%); Timeout: 9/10 (90%, one scenario at boundary latency).*
 
@@ -126,7 +127,7 @@ Running `Prototype.py` generates the following six publication-quality figures, 
 
 ### Fig. 6a — ASI-PLC Latency Distribution: Valid-Credential Scenarios
 
-[![Fig. 6a — ASI-PLC Latency Distribution](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_1.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_1.png)
+[![Fig. 6a — ASI-PLC Latency Distribution](Images/Figure_1.png)](Images/Figure_1.png)
 
 *QBFT finality + OPC-UA delivery latency for valid-credential scenarios (n=120, seed=2025). Mean = 275.2 ms; P95 = 371.4 ms. All valid scenarios fall well within the 500 ms permissive window. KDE overlay confirms near-normal distribution.*
 
@@ -134,7 +135,7 @@ Running `Prototype.py` generates the following six publication-quality figures, 
 
 ### Fig. 6c — Compliance Bit Timeline & Latency (First 40 Decisions)
 
-[![Fig. 6c — Compliance Bit Timeline & Latency](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_3.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_3.png)
+[![Fig. 6c — Compliance Bit Timeline & Latency](Images/Figure_3.png)](Images/Figure_3.png)
 
 *Top panel: Compliance Bit state (TRUE/FALSE) over the first 40 PLC decision cycles. Bottom panel: per-cycle latency with 500 ms permissive window and mean valid latency (275 ms) reference lines. All 40 valid-credential cycles resolve as COMPLIANT with latency well below the threshold.*
 
@@ -142,7 +143,7 @@ Running `Prototype.py` generates the following six publication-quality figures, 
 
 ### Fig. 6d — ASI-PLC Latency CDF: Valid vs. Timeout Scenarios
 
-[![Fig. 6d — Latency CDF: Valid vs. Timeout](https://github.com/hasiburrahman4/hasiburrahman4.github.io/raw/main/Images/Figure_4.png)](https://github.com/hasiburrahman4/hasiburrahman4.github.io/blob/main/Images/Figure_4.png)
+[![Fig. 6d — Latency CDF: Valid vs. Timeout](Images/Figure_4.png)](Images/Figure_4.png)
 
 *Cumulative distribution functions for valid (n=120, solid green) and timeout (n=10, dashed blue) scenarios. Valid P95 = 371.4 ms; the entire valid CDF sits below the 500 ms permissive window. All timeout scenarios fall in the Soft Lock zone (>500 ms), confirming clean separation between the two populations.*
 
@@ -163,7 +164,7 @@ These correspond to the STRIDE threat model in **Table IV** of the paper.
 
 ## Installation
 
-**Requirements:** Python 3.10+
+**Requirements:** Python 3.10+ (developed and tested on Python 3.14)
 
 ```
 pip install numpy scipy matplotlib seaborn streamlit
@@ -231,7 +232,7 @@ If you use this code in your research, please cite:
 
 ```bibtex
 @article{ashraf2025atc,
-  author  = {Sk. Riad Bin Ashraf, Hasibur Rahman, Bernd Noche and Gürpinar Tan},
+  author  = {Sk. Riad Bin Ashraf, Hasibur Rahman, Bernd Noche, Gürpinar Tan},
   title   = {Adaptive Trust Chain (ATC): A Blockchain-Based Weld Certification
              Framework for Structural Integrity Assurance in Green Hydrogen
              Infrastructure},
